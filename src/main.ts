@@ -4,7 +4,7 @@ import { SwaggerModule } from '@nestjs/swagger';
 import * as YAML from 'yamljs';
 import { join } from 'path';
 
-const PORT = 4000;
+const { PORT = 4000 } = process.env;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,7 +12,7 @@ async function bootstrap() {
   const document = YAML.load(join(__dirname, '../doc/api.yaml'));
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(PORT).then(() => console.log('Server started at port🚀: ', PORT));
+  await app.listen(PORT).then(() => console.log('Server 🚀 started at port: ', PORT));
 }
 
 bootstrap();
