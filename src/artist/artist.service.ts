@@ -1,26 +1,39 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { ArtistRepository } from './artist.repository';
+import { Artist } from './entities/artist.entity';
 
 @Injectable()
 export class ArtistService {
+  constructor(private readonly repository: ArtistRepository) {}
+
   create(createArtistDto: CreateArtistDto) {
-    return 'This action adds a new artist';
+    return this.repository.create(createArtistDto);
   }
 
   findAll() {
-    return `This action returns all artist`;
+    return this.repository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} artist`;
+  async findOne(id: string) {
+    const obj = await this.repository.findOne(id);
+    if (!obj) throw new NotFoundException();
+    return obj;
   }
 
-  update(id: number, updateArtistDto: UpdateArtistDto) {
-    return `This action updates a #${id} artist`;
+  async update(id: string, updateArtistDto: UpdateArtistDto) {
+    const artist = await this.repository.findOne(id);
+    if (artist) {
+      const updateObj = new Artist(artist);
+      Object.assign(updateObj, updateArtistDto);
+      return await this.repository.update(id, updateObj);
+    } else throw new NotFoundException();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} artist`;
+  async remove(id: string) {
+    const deleted = await this.repository.remove(id);
+    if (deleted) return deleted;
+    else throw new NotFoundException();
   }
 }

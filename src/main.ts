@@ -9,7 +9,7 @@ const { PORT = 4000 } = process.env;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(new ValidationPipe());
 
   const document = YAML.load(join(__dirname, '../doc/api.yaml'));
   SwaggerModule.setup('api', app, document);
