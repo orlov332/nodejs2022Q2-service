@@ -1,10 +1,12 @@
 import { Exclude } from 'class-transformer';
+import { IsUUID } from 'class-validator';
 
 export class User {
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);
   }
 
+  @IsUUID('4')
   id: string; // uuid v4
 
   login: string;

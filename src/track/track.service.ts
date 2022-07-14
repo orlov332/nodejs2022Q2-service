@@ -5,7 +5,15 @@ import { TrackRepository } from './track.repository';
 
 @Injectable()
 export class TrackService extends RestService<Track> {
-  constructor(repository: TrackRepository) {
+  constructor(protected readonly repository: TrackRepository) {
     super(repository);
+  }
+
+  removeArtistRef(artistId: string) {
+    this.repository.removeArtistRef(artistId);
+  }
+
+  removeAlbumRef(albumId: string) {
+    this.repository.removeAlbumRef(albumId);
   }
 }

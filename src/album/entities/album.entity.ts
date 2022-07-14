@@ -1,6 +1,7 @@
-import { IsInt, IsString, IsUUID } from 'class-validator';
+import { IsInt, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class Album {
+  @IsUUID('4')
   id: string; // uuid v4
 
   @IsString()
@@ -9,6 +10,7 @@ export class Album {
   @IsInt()
   year: number;
 
+  @IsOptional()
   @IsUUID('4')
   artistId: string | null; // refers to Artist
 }
