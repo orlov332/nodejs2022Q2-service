@@ -1,9 +1,15 @@
 import { v4 as uuid4 } from 'uuid';
+import { IRepository } from './repository';
 
-export class MemoryRepository<TEntity extends { id: string }> {
+export class MemoryRepository<
+  TEntity extends { id: string },
+  TCreateDto = Omit<TEntity, 'id'>,
+  TUpdateDto = Partial<Omit<TEntity, 'id'>>,
+> implements IRepository<TEntity, TCreateDto, TUpdateDto>
+{
   protected data: TEntity[] = [];
 
-  async create(createObj: Omit<TEntity, 'id'>): Promise<TEntity> {
+  async create(createObj: TCreateDto): Promise<TEntity> {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const newObj: TEntity = {
@@ -22,7 +28,7 @@ export class MemoryRepository<TEntity extends { id: string }> {
     return this.data.find((u) => u.id === id);
   }
 
-  async update(id: string, updateObj: Partial<Omit<TEntity, 'id'>>): Promise<TEntity | undefined> {
+  async update(id: string, updateObj: TUpdateDto): Promise<TEntity | undefined> {
     const obj = await this.findOne(id);
     if (obj) Object.assign(obj, updateObj);
     return obj;
