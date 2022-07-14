@@ -40,7 +40,7 @@ export class UserController {
   @Put(':id')
   @UseInterceptors(ClassSerializerInterceptor)
   update(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+    return this.userService.updatePassword(id, updateUserDto);
   }
 
   @Delete(':id')

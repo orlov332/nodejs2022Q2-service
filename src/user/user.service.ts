@@ -28,7 +28,7 @@ export class UserService {
     else throw new NotFoundException();
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async updatePassword(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.repository.findOne(id);
     if (user) {
       if (user.password === updateUserDto.oldPassword) {
