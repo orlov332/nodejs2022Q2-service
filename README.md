@@ -12,19 +12,25 @@ git clone {repository URL}
 ```
 
 ## Installing NPM modules
-
 ```
 npm install
 ```
+## Environment variables
+Rename `.env.example` to `.env` and correct `PORT` if needed (`4000` by default).
 
 ## Running application
-
-```
-npm start
-```
+Choose one of the following mode
+### Simple development mode
+`npm start`
+### Development watch mode
+`npm run start:dev`
+### Development debug mode
+`npm run start:debug`
+### Production mode
+`npm run build && npm run start:prod`
 
 After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
+in your browser OpenAPI documentation by typing http://localhost:4000/doc.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
 ## Testing
