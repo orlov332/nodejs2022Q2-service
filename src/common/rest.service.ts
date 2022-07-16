@@ -18,7 +18,7 @@ export class RestService<
 
   async findOne(id: string): Promise<TEntity> {
     const obj = await this.repository.findOne(id);
-    if (!obj) throw new NotFoundException();
+    if (!obj) throw new NotFoundException(`Object with id(${id}) not found`, 'Object by Id not found');
     return obj;
   }
 
@@ -26,12 +26,12 @@ export class RestService<
     const obj = await this.repository.findOne(id);
     if (obj) {
       return await this.repository.update(id, { ...obj, ...updateDto });
-    } else throw new NotFoundException();
+    } else throw new NotFoundException(`Object with id(${id}) not found`, 'Object by Id not found');
   }
 
   async remove(id: string): Promise<number> {
     const deleted = await this.repository.remove(id);
     if (deleted) return deleted;
-    else throw new NotFoundException();
+    else throw new NotFoundException(`Object with id(${id}) not found`, 'Object not found');
   }
 }
