@@ -20,9 +20,11 @@ npm install
 Rename `.env.example` to `.env` and correct `PORT` if needed (`4000` by default).
 
 ## Build and run docker images
-## Build app image
+### Run both DB and API server
+`docker-compose up`
+### Build app image
 `docker build . -t orlov332/nodejs2022q2-service`
-## Scan app image
+### Scan app image
 `docker scan orlov332/nodejs2022q2-service`
 
 ## Running application

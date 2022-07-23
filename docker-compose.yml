@@ -1,0 +1,39 @@
+
+services:
+  music-lib-db:
+    build:
+      context: ./database
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_SCHEMA}
+    ports:
+      - '${DB_PORT}:5432'
+    volumes:
+      - music-lib-db-data:/var/lib/postgresql/data
+    networks:
+      - mus-lib-net
+
+  music-lib-api:
+    build:
+      context: .
+    restart: always
+    environment:
+      DB_SCHEMA: ${DB_SCHEMA}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+    depends_on:
+      - music-lib-db
+    ports:
+      - '${PORT}:${PORT}'
+    networks:
+      - mus-lib-net
+
+volumes:
+  music-lib-db-data:
+
+networks:
+  mus-lib-net:
