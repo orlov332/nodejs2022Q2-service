@@ -21,11 +21,13 @@ Rename `.env.example` to `.env` and correct `PORT` if needed (`4000` by default)
 
 ## Build and run docker images
 ### Run both DB and API server
-`docker-compose up`
-### Build app image
-`docker build . -t orlov332/nodejs2022q2-service`
+`npm run docker:start`
+### Build app images
+`npm run docker:build`
+### Push app images
+`npm run docker:build`
 ### Scan app image
-`docker scan orlov332/nodejs2022q2-service`
+`npm run docker:scan`
 
 ## Running application
 Choose one of the following mode
