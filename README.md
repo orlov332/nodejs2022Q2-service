@@ -4,6 +4,7 @@
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker = [Download & Install Docker](https://www.docker.com/products/docker-desktop/)
 
 ## Downloading
 
@@ -17,6 +18,12 @@ npm install
 ```
 ## Environment variables
 Rename `.env.example` to `.env` and correct `PORT` if needed (`4000` by default).
+
+## Build and run docker images
+## Build app image
+`docker build . -t orlov332/nodejs2022q2-service`
+## Scan app image
+`docker scan orlov332/nodejs2022q2-service`
 
 ## Running application
 Choose one of the following mode
