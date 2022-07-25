@@ -7,7 +7,7 @@ export class PrismaRepository<
   TUpdateDto = Partial<Omit<TEntity, 'id'>>,
 > implements IRepository<TEntity, TCreateDto, TUpdateDto>
 {
-  constructor(private readonly prisma: PrismaService, private readonly entityName: string) {}
+  constructor(protected readonly prisma: PrismaService, private readonly entityName: string) {}
 
   async create(createObj: TCreateDto): Promise<TEntity> {
     return this.prisma[this.entityName].create({ data: createObj });
