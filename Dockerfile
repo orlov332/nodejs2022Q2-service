@@ -14,4 +14,7 @@ ENV PORT=4000
 
 EXPOSE $PORT
 
-CMD ["npx", "nest", "start", "--watch"]
+# Generate prisma code
+RUN npx prisma generate
+
+CMD ["npm", "run", "start:dev:migrate"]

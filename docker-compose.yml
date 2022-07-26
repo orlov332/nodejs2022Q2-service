@@ -3,7 +3,7 @@ services:
   music-lib-db:
     build:
       context: ./database
-    image: orlov332/nodejs2022q2-service-api
+    image: orlov332/nodejs2022q2-service-db
     restart: always
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -19,7 +19,7 @@ services:
   music-lib-api:
     build:
       context: .
-    image: orlov332/nodejs2022q2-service-db
+    image: orlov332/nodejs2022q2-service-api
     restart: always
     environment:
       DB_SCHEMA: ${DB_SCHEMA}
@@ -31,6 +31,8 @@ services:
       - music-lib-db
     ports:
       - '${PORT}:${PORT}'
+    volumes:
+      - ./src:/usr/src/app/src
     networks:
       - mus-lib-net
 
