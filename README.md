@@ -4,6 +4,7 @@
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker = [Download & Install Docker](https://www.docker.com/products/docker-desktop/)
 
 ## Downloading
 
@@ -17,6 +18,16 @@ npm install
 ```
 ## Environment variables
 Rename `.env.example` to `.env` and correct `PORT` if needed (`4000` by default).
+
+## Build and run docker images
+### Run both DB and API server
+`npm run docker:start`
+### Build app images
+`npm run docker:build`
+### Push app images
+`npm run docker:build`
+### Scan app image
+`npm run docker:scan`
 
 ## Running application
 Choose one of the following mode
