@@ -1,18 +1,28 @@
-import { Injectable } from '@nestjs/common';
-import { MemoryRepository } from '../common/memory.repository';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Track } from './entities/track.entity';
+import { PrismaRepository } from '../common/prisma.repository';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
-export class TrackRepository extends MemoryRepository<Track> {
+export class TrackRepository extends PrismaRepository<Track> {
+  constructor(
+    @Inject(forwardRef(() => PrismaService))
+    prisma: PrismaService,
+  ) {
+    super(prisma, 'track');
+  }
+
   removeArtistRef(artistId: string) {
-    this.data.forEach((track) => {
-      if (track.artistId === artistId) track.artistId = null;
+    this.prisma.track.updateMany({
+      data: { artistId: null },
+      where: { artistId },
     });
   }
 
   removeAlbumRef(albumId: string) {
-    this.data.forEach((track) => {
-      if (track.albumId === albumId) track.albumId = null;
+    this.prisma.track.updateMany({
+      data: { albumId: null },
+      where: { albumId },
     });
   }
 }

@@ -18,13 +18,7 @@ export class FavoritesService {
   ) {}
 
   async getFavorites(): Promise<FavoritesResponse> {
-    const { albums, artists, tracks } = await this.repository.getFavorites();
-
-    return {
-      albums: await Promise.all(albums.map((albumId) => this.albumService.findOne(albumId))),
-      artists: await Promise.all(artists.map((artistId) => this.artistService.findOne(artistId))),
-      tracks: await Promise.all(tracks.map((trackId) => this.trackService.findOne(trackId))),
-    };
+    return this.repository.getFavorites();
   }
 
   async addTrack(id: string) {
@@ -35,8 +29,8 @@ export class FavoritesService {
   }
 
   async removeTrack(id: string) {
-    const favorites = await this.repository.getFavorites();
-    if (!favorites.tracks.includes(id)) throw new NotFoundException();
+    const favorites = await this.repository.getFavoriteTrackIds();
+    if (!favorites.includes(id)) throw new NotFoundException();
     await this.repository.removeTrack(id);
   }
 
@@ -48,8 +42,8 @@ export class FavoritesService {
   }
 
   async removeArtist(id: string) {
-    const favorites = await this.repository.getFavorites();
-    if (!favorites.artists.includes(id)) throw new NotFoundException();
+    const favorites = await this.repository.getFavoriteArtistIds();
+    if (!favorites.includes(id)) throw new NotFoundException();
     await this.repository.removeArtist(id);
   }
 
@@ -61,8 +55,8 @@ export class FavoritesService {
   }
 
   async removeAlbum(id: string) {
-    const favorites = await this.repository.getFavorites();
-    if (!favorites.albums.includes(id)) throw new NotFoundException();
+    const favorites = await this.repository.getFavoriteAlbumIds();
+    if (!favorites.includes(id)) throw new NotFoundException();
     await this.repository.removeAlbum(id);
   }
 }
