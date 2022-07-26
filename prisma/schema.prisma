@@ -11,37 +11,43 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  login     String
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt @default(now())
-  version   Int
+  id         String   @id @default(uuid())
+  login      String
+  password   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+  version    Int
+  favAlbums  Album[]
+  favTracks  Track[]
+  favArtists Artist[]
 }
 
 model Artist {
-  id        String   @id @default(uuid())
-  name      String
-  grammy    Boolean?
-  albums    Album[]
-  tracks    Track[]
+  id         String   @id @default(uuid())
+  name       String
+  grammy     Boolean?
+  albums     Album[]
+  tracks     Track[]
+  favoriteBy User[]
 }
 
 model Album {
-  id        String   @id @default(uuid())
-  name      String
-  year      Int
-  artistId  String?
-  artist    Artist?  @relation(fields: [artistId], references: [id])
-  tracks    Track[]
+  id         String  @id @default(uuid())
+  name       String
+  year       Int
+  artistId   String?
+  artist     Artist? @relation(fields: [artistId], references: [id])
+  tracks     Track[]
+  favoriteBy User[]
 }
 
 model Track {
-  id        String   @id @default(uuid())
-  name      String
-  duration  Int
-  artistId  String?
-  artist    Artist?  @relation(fields: [artistId], references: [id])
-  albumId   String?
-  album     Album?   @relation(fields: [albumId], references: [id])
+  id         String  @id @default(uuid())
+  name       String
+  duration   Int
+  artistId   String?
+  artist     Artist? @relation(fields: [artistId], references: [id])
+  albumId    String?
+  album      Album?  @relation(fields: [albumId], references: [id])
+  favoriteBy User[]
 }
