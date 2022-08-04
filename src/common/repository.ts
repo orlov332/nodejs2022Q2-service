@@ -1,4 +1,8 @@
-export interface IRepository<TEntity extends { id: string }, TCreateDto, TUpdateDto> {
+export interface IRepository<
+  TEntity extends { id: string },
+  TCreateDto = Omit<TEntity, 'id'>,
+  TUpdateDto = Partial<Omit<TEntity, 'id'>>,
+> {
   create(createObj: TCreateDto): Promise<TEntity>;
 
   findAll(): Promise<TEntity[]>;

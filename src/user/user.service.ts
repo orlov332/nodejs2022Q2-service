@@ -9,13 +9,7 @@ export class UserService {
   constructor(private readonly repository: UserRepository) {}
 
   create(createUserDto: CreateUserDto) {
-    const user = {
-      ...createUserDto,
-      version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    };
-    return this.repository.create(user).then((user) => new User(user));
+    return this.repository.create(createUserDto).then((user) => new User(user));
   }
 
   findAll() {
@@ -36,7 +30,6 @@ export class UserService {
           ...user,
           password: updateUserDto.newPassword,
           version: user.version + 1,
-          updatedAt: Date.now(),
         };
         return await this.repository.update(id, updateObj).then((user) => new User(user));
       } else throw new ForbiddenException();
