@@ -9,6 +9,14 @@ import { AllExceptionsFilter } from './all-exceptions.filter';
 
 const { PORT = 4000 } = process.env;
 
+process.on('uncaughtException', (err, origin) => {
+  Logger.error(`Caught exception: ${err}, Exception origin: ${origin}`, err.stack, 'UncaughtException');
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  Logger.error(`Unhandled Rejection at: ${promise}, reason: ${reason}`, 'UnhandledRejection');
+});
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,

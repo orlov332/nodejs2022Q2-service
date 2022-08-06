@@ -1,6 +1,5 @@
-import { ConsoleLogger, ConsoleLoggerOptions, Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { LogLevel } from '@nestjs/common/services/logger.service';
-import * as util from 'util';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -20,33 +19,32 @@ export class LoggerService extends ConsoleLogger {
 
   log(message: any, ...optionalParams) {
     super.log(message, ...optionalParams);
-    this.logToFile('log', message, ...optionalParams);
+    this.logToFile('log', message);
   }
 
   error(message: any, ...optionalParams) {
     super.error(message, ...optionalParams);
-    this.logToFile('error', message, ...optionalParams);
+    this.logToFile('error', message);
   }
 
   warn(message: any, ...optionalParams) {
     super.warn(message, ...optionalParams);
-    this.logToFile('warn', message, ...optionalParams);
+    this.logToFile('warn', message);
   }
 
   debug(message: any, ...optionalParams) {
     super.debug(message, ...optionalParams);
-    this.logToFile('debug', message, ...optionalParams);
+    this.logToFile('debug', message);
   }
 
   verbose(message: any, ...optionalParams) {
     super.verbose(message, ...optionalParams);
-    this.logToFile('verbose', message, ...optionalParams);
+    this.logToFile('verbose', message);
   }
 
-  private logToFile(level: LogLevel, format: any, ...strings: string[]) {
+  private logToFile(level: LogLevel, message: any) {
     if (this.isLevelEnabled(level)) {
-      const message = util.format(format, ...strings);
-      this.writeToFile(level, message);
+      this.writeToFile(level, `${level.toUpperCase()} - ${new Date().toISOString()} - ${message}`);
     }
   }
 
