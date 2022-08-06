@@ -4,15 +4,18 @@ import * as util from 'util';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const LOGGER_FILE_SIZE = Number(process.env.LOGGER_FILE_SIZE) || 1024;
+const { LOGGER_FILE_SIZE = 1024 } = process.env;
+const { LOGGER_LEVEL = 4 } = process.env;
+
+const logLevels: LogLevel[] = ['error', 'warn', 'log', 'debug', 'verbose'];
 
 @Injectable()
 export class LoggerService extends ConsoleLogger {
   private readonly logsFileName = path.join(process.cwd(), 'logs', 'current.log');
   private readonly errorsFileName = path.join(process.cwd(), 'logs', 'error.log');
 
-  constructor(context: string, options: ConsoleLoggerOptions) {
-    super(context, options);
+  constructor(context: string) {
+    super(context, { logLevels: logLevels.slice(0, 1 + Number(LOGGER_LEVEL)) });
   }
 
   log(message: any, ...optionalParams) {
@@ -53,7 +56,7 @@ export class LoggerService extends ConsoleLogger {
     const stat = fs.statSync(fileName, { throwIfNoEntry: false });
     if (stat) {
       // Rename log chunk
-      if (stat.size >= LOGGER_FILE_SIZE * 1024)
+      if (stat.size >= Number(LOGGER_FILE_SIZE) * 1024)
         fs.renameSync(fileName, `${fileName}.${new Date().toISOString().replace(':', '-')}`);
     } else fs.mkdirSync(path.dirname(fileName), { recursive: true });
     fs.appendFileSync(fileName, `${message}\n`);

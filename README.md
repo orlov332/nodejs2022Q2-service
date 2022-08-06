@@ -17,7 +17,12 @@ git clone {repository URL}
 npm install
 ```
 ## Environment variables
-Rename `.env.example` to `.env` and correct `PORT` if needed (`4000` by default).
+Rename `.env.example` to `.env` and correct if needed.
+### Application server port
+ - `PORT` (`4000` by default)
+### Logger settings
+ - `LOGGER_FILE_SIZE` File size in KB (`1024` by default)
+ - `LOGGER_LEVEL` Log level: from `0` to `4` (`4` by default)
 
 ## Build and run docker images
 ### Run both DB and API server
