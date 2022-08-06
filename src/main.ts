@@ -1,10 +1,11 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule } from '@nestjs/swagger';
 import * as YAML from 'yamljs';
 import { join } from 'path';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { LoggerService } from './logger/logger.service';
+import { AllExceptionsFilter } from './all-exceptions.filter';
 
 const { PORT = 4000 } = process.env;
 
@@ -14,6 +15,7 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   app.useLogger(app.get(LoggerService));
+  app.useGlobalFilters(new AllExceptionsFilter(app.get(HttpAdapterHost)));
 
   const document = YAML.load(join(__dirname, '../doc/api.yaml'));
   SwaggerModule.setup('doc', app, document);
