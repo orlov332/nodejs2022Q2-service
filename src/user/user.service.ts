@@ -54,6 +54,6 @@ export class UserService {
   async findByLogin(login: string) {
     const user = await this.repository.findOneByLogin(login);
     if (user) return new User(user);
-    else throw new NotFoundException();
+    else return undefined;
   }
 }
