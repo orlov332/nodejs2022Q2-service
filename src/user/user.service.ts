@@ -12,7 +12,8 @@ export class UserService {
     return this.repository.create(createUserDto).then((user) => new User(user));
   }
 
-  findAll() {
+  async findAll() {
+    // throw new Error('Test error');
     return this.repository.findAll().then((users) => users.map((user) => new User(user)));
   }
 
