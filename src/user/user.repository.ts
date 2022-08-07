@@ -10,8 +10,8 @@ function dbUserToDto(user: Prisma.User): User {
     const { createdAt, updatedAt, ...rest } = user;
     return {
       ...rest,
-      createdAt: createdAt.getUTCMilliseconds(),
-      updatedAt: updatedAt.getUTCMilliseconds(),
+      createdAt: createdAt.getTime(),
+      updatedAt: updatedAt.getTime(),
     };
   } else return undefined;
 }

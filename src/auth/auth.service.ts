@@ -4,13 +4,7 @@ import { LoginDto } from './dto/login.dto';
 import { UserService } from '../user/user.service';
 import { JwtDto } from './dto/jwt.dto';
 import { JwtService } from '@nestjs/jwt';
-
-const {
-  JWT_SECRET_KEY = 'secret123123',
-  JWT_SECRET_REFRESH_KEY = 'secret123123',
-  TOKEN_EXPIRE_TIME = '1h',
-  TOKEN_REFRESH_EXPIRE_TIME = '24h',
-} = process.env;
+import { JWT_SECRET_KEY, JWT_SECRET_REFRESH_KEY, TOKEN_EXPIRE_TIME, TOKEN_REFRESH_EXPIRE_TIME } from './constants';
 
 @Injectable()
 export class AuthService {
