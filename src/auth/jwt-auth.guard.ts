@@ -2,7 +2,7 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 
-const excludedRoutes = ['/auth/login', '/auth/signup', '/auth/signup'];
+const excludedRoutes = ['/auth/login', '/auth/signup', '/auth/refresh'];
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {

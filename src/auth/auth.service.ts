@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotImplementedException } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
 import { UserService } from '../user/user.service';
@@ -17,21 +17,30 @@ export class AuthService {
   async login(loginDto: LoginDto): Promise<JwtDto> {
     const user = await this.userService.findByLogin(loginDto.login);
     if (user && (await this.userService.isMatchPassword(user, loginDto.password))) {
-      const payload = { username: user.login, sub: user.id };
-      return {
-        accessToken: this.jwtService.sign(payload, {
-          secret: JWT_SECRET_KEY,
-          expiresIn: TOKEN_EXPIRE_TIME,
-        }),
-        refreshToken: this.jwtService.sign(payload, {
-          secret: JWT_SECRET_REFRESH_KEY,
-          expiresIn: TOKEN_REFRESH_EXPIRE_TIME,
-        }),
-      };
+      return this.createToken(user.id, user.login);
     } else throw new ForbiddenException();
   }
 
-  refreshToken(): Promise<JwtDto> {
-    throw new NotImplementedException();
+  async refreshToken(refreshToken: string): Promise<JwtDto> {
+    try {
+      const { username, sub } = await this.jwtService.verifyAsync(refreshToken, { secret: JWT_SECRET_REFRESH_KEY });
+      return this.createToken(sub, username);
+    } catch (e) {
+      throw new ForbiddenException(e);
+    }
+  }
+
+  private async createToken(sub, username): Promise<JwtDto> {
+    const payload = { username, sub };
+    return {
+      accessToken: await this.jwtService.signAsync(payload, {
+        secret: JWT_SECRET_KEY,
+        expiresIn: TOKEN_EXPIRE_TIME,
+      }),
+      refreshToken: await this.jwtService.signAsync(payload, {
+        secret: JWT_SECRET_REFRESH_KEY,
+        expiresIn: TOKEN_REFRESH_EXPIRE_TIME,
+      }),
+    };
   }
 }

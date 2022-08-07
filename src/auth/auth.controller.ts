@@ -1,7 +1,8 @@
-import { Body, ClassSerializerInterceptor, Controller, Post, UseInterceptors } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
+import { RefreshDto } from './dto/refresh.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,7 +20,7 @@ export class AuthController {
   }
 
   @Post('refresh')
-  refresh() {
-    return this.authService.refreshToken();
+  refresh(@Body() { refreshToken }: RefreshDto) {
+    return this.authService.refreshToken(refreshToken);
   }
 }
