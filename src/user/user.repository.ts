@@ -53,4 +53,8 @@ export class UserRepository implements IRepository<User> {
       })
       .then(dbUserToDto);
   }
+
+  async findOneByLogin(login: string) {
+    return this.prisma.user.findFirst({ where: { login } }).then(dbUserToDto);
+  }
 }

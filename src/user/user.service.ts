@@ -3,12 +3,16 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from './user.repository';
 import { User } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
+
+const saltOrRounds = Number(process.env.CRYPT_SALT) || 10;
 
 @Injectable()
 export class UserService {
   constructor(private readonly repository: UserRepository) {}
 
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
+    createUserDto.password = await bcrypt.hash(createUserDto.password, saltOrRounds);
     return this.repository.create(createUserDto).then((user) => new User(user));
   }
 
@@ -23,10 +27,14 @@ export class UserService {
     else throw new NotFoundException();
   }
 
+  async isMatchPassword(user: User, password: string): Promise<boolean> {
+    return await bcrypt.compare(password, user.password);
+  }
+
   async updatePassword(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.repository.findOne(id);
     if (user) {
-      if (user.password === updateUserDto.oldPassword) {
+      if (await this.isMatchPassword(user, updateUserDto.oldPassword)) {
         const updateObj = {
           ...user,
           password: updateUserDto.newPassword,
@@ -40,6 +48,12 @@ export class UserService {
   async remove(id: string) {
     const deleted = await this.repository.remove(id);
     if (deleted) return deleted;
+    else throw new NotFoundException();
+  }
+
+  async findByLogin(login: string) {
+    const user = await this.repository.findOneByLogin(login);
+    if (user) return new User(user);
     else throw new NotFoundException();
   }
 }
