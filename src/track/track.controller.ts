@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, Req } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
@@ -29,7 +29,7 @@ export class TrackController {
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.trackService.remove(id);
+  remove(@Req() { user: { id: userId } }, @Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.trackService.removeWithFav(userId, id);
   }
 }

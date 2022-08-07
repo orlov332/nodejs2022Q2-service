@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Req } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 import { FavoritesResponse } from './dto/favorites-response';
 
@@ -7,40 +7,40 @@ export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @Get()
-  getFavorites(): Promise<FavoritesResponse> {
-    return this.favoritesService.getFavorites();
+  getFavorites(@Req() { user: { id: userId } }): Promise<FavoritesResponse> {
+    return this.favoritesService.getFavorites(userId);
   }
 
   @Post('track/:id')
-  addTrack(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favoritesService.addTrack(id);
+  addTrack(@Req() { user: { id: userId } }, @Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.favoritesService.addTrack(userId, id);
   }
 
   @Delete('track/:id')
   @HttpCode(204)
-  removeTrack(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favoritesService.removeTrack(id);
+  removeTrack(@Req() { user: { id: userId } }, @Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.favoritesService.removeTrack(userId, id);
   }
 
   @Post('artist/:id')
-  addArtist(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favoritesService.addArtist(id);
+  addArtist(@Req() { user: { id: userId } }, @Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.favoritesService.addArtist(userId, id);
   }
 
   @Delete('artist/:id')
   @HttpCode(204)
-  removeArtist(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favoritesService.removeArtist(id);
+  removeArtist(@Req() { user: { id: userId } }, @Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.favoritesService.removeArtist(userId, id);
   }
 
   @Post('album/:id')
-  addAlbum(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favoritesService.addAlbum(id);
+  addAlbum(@Req() { user: { id: userId } }, @Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.favoritesService.addAlbum(userId, id);
   }
 
   @Delete('album/:id')
   @HttpCode(204)
-  removeAlbum(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favoritesService.removeAlbum(id);
+  removeAlbum(@Req() { user: { id: userId } }, @Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.favoritesService.removeAlbum(userId, id);
   }
 }

@@ -10,8 +10,8 @@ function dbUserToDto(user: Prisma.User): User {
     const { createdAt, updatedAt, ...rest } = user;
     return {
       ...rest,
-      createdAt: createdAt.getUTCMilliseconds(),
-      updatedAt: updatedAt.getUTCMilliseconds(),
+      createdAt: createdAt.getTime(),
+      updatedAt: updatedAt.getTime(),
     };
   } else return undefined;
 }
@@ -52,5 +52,9 @@ export class UserRepository implements IRepository<User> {
         where: { id },
       })
       .then(dbUserToDto);
+  }
+
+  async findOneByLogin(login: string) {
+    return this.prisma.user.findFirst({ where: { login } }).then(dbUserToDto);
   }
 }

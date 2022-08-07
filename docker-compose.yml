@@ -33,11 +33,13 @@ services:
       - '${PORT}:${PORT}'
     volumes:
       - ./src:/usr/src/app/src
+      -   music-app-logs:/usr/src/app/logs
     networks:
       - mus-lib-net
 
 volumes:
   music-lib-db-data:
+  music-app-logs:
 
 networks:
   mus-lib-net:

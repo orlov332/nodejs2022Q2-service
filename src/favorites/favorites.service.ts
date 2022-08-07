@@ -17,46 +17,46 @@ export class FavoritesService {
     private readonly artistService: ArtistService,
   ) {}
 
-  async getFavorites(): Promise<FavoritesResponse> {
-    return this.repository.getFavorites();
+  async getFavorites(userId: string): Promise<FavoritesResponse> {
+    return this.repository.getFavorites(userId);
   }
 
-  async addTrack(id: string) {
-    await this.trackService.findOne(id).catch(() => {
+  async addTrack(userId: string, trackId: string) {
+    await this.trackService.findOne(trackId).catch(() => {
       throw new HttpException("Track doesn't exist", 422);
     });
-    await this.repository.addTrack(id);
+    await this.repository.addTrack(userId, trackId);
   }
 
-  async removeTrack(id: string) {
-    const favorites = await this.repository.getFavoriteTrackIds();
-    if (!favorites.includes(id)) throw new NotFoundException();
-    await this.repository.removeTrack(id);
+  async removeTrack(userId: string, trackId: string) {
+    const favorites = await this.repository.getFavoriteTrackIds(userId);
+    if (!favorites.includes(trackId)) throw new NotFoundException();
+    await this.repository.removeTrack(userId, trackId);
   }
 
-  async addArtist(id: string) {
-    await this.artistService.findOne(id).catch(() => {
+  async addArtist(userId: string, artistId: string) {
+    await this.artistService.findOne(artistId).catch(() => {
       throw new HttpException("Artist doesn't exist", 422);
     });
-    await this.repository.addArtist(id);
+    await this.repository.addArtist(userId, artistId);
   }
 
-  async removeArtist(id: string) {
-    const favorites = await this.repository.getFavoriteArtistIds();
-    if (!favorites.includes(id)) throw new NotFoundException();
-    await this.repository.removeArtist(id);
+  async removeArtist(userId: string, artistId: string) {
+    const favorites = await this.repository.getFavoriteArtistIds(userId);
+    if (!favorites.includes(artistId)) throw new NotFoundException();
+    await this.repository.removeArtist(userId, artistId);
   }
 
-  async addAlbum(id: string) {
-    await this.albumService.findOne(id).catch(() => {
+  async addAlbum(userId: string, albumId: string) {
+    await this.albumService.findOne(albumId).catch(() => {
       throw new HttpException("Album doesn't exist", 422);
     });
-    await this.repository.addAlbum(id);
+    await this.repository.addAlbum(userId, albumId);
   }
 
-  async removeAlbum(id: string) {
-    const favorites = await this.repository.getFavoriteAlbumIds();
-    if (!favorites.includes(id)) throw new NotFoundException();
-    await this.repository.removeAlbum(id);
+  async removeAlbum(userId: string, albumId: string) {
+    const favorites = await this.repository.getFavoriteAlbumIds(userId);
+    if (!favorites.includes(albumId)) throw new NotFoundException();
+    await this.repository.removeAlbum(userId, albumId);
   }
 }
