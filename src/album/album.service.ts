@@ -17,8 +17,8 @@ export class AlbumService extends RestService<Album> {
     super(repository);
   }
 
-  async remove(id: string): Promise<number> {
-    await this.favoritesService.removeAlbum(id).catch((err) => {
+  async removeWithFav(userId: string, id: string): Promise<number> {
+    await this.favoritesService.removeAlbum(userId, id).catch((err) => {
       if (!(err instanceof NotFoundException)) throw err;
     });
     await this.trackService.removeAlbumRef(id);

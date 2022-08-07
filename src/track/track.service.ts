@@ -14,8 +14,8 @@ export class TrackService extends RestService<Track> {
     super(repository);
   }
 
-  async remove(id: string): Promise<number> {
-    await this.favoritesService.removeTrack(id).catch((err) => {
+  async removeWithFav(userId: string, id: string): Promise<number> {
+    await this.favoritesService.removeTrack(userId, id).catch((err) => {
       if (!(err instanceof NotFoundException)) throw err;
     });
     return await super.remove(id);

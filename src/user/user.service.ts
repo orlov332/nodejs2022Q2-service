@@ -37,7 +37,7 @@ export class UserService {
       if (await this.isMatchPassword(user, updateUserDto.oldPassword)) {
         const updateObj = {
           ...user,
-          password: updateUserDto.newPassword,
+          password: await bcrypt.hash(updateUserDto.newPassword, saltOrRounds),
           version: user.version + 1,
         };
         return await this.repository.update(id, updateObj).then((user) => new User(user));

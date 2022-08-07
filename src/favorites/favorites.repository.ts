@@ -9,29 +9,16 @@ export class FavoritesRepository {
     private readonly prisma: PrismaService,
   ) {}
 
-  // FIXME: Take current user from JWT
-  private readonly userId = 'c3190809-84ad-4eeb-8d2a-6be59da588f9';
-
-  private async getCurrentUser() {
-    let user = await this.prisma.user.findUnique({
-      where: { id: this.userId },
+  private async getCurrentUser(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
     });
-    // FIXME: Remove me once authorization has done
-    if (!user) {
-      user = await this.prisma.user.create({
-        data: {
-          id: this.userId,
-          login: 'current_user',
-          password: 'secret',
-          version: 1,
-        },
-      });
-    }
+    if (!user) throw new Error(`User with id ${userId} not found in Data Base`);
     return user;
   }
 
-  async getFavorites(): Promise<FavoritesResponse> {
-    const user = await this.getCurrentUser();
+  async getFavorites(userId: string): Promise<FavoritesResponse> {
+    const user = await this.getCurrentUser(userId);
     return await this.prisma.user
       .findUnique({
         where: { id: user.id },
@@ -48,8 +35,8 @@ export class FavoritesRepository {
       }));
   }
 
-  private async addFavorite(favorite: string, id: string) {
-    const user = await this.getCurrentUser();
+  private async addFavorite(userId: string, favorite: string, id: string) {
+    const user = await this.getCurrentUser(userId);
     await this.prisma.user.update({
       where: { id: user.id },
       data: {
@@ -60,8 +47,8 @@ export class FavoritesRepository {
     });
   }
 
-  private async removeFavorite(favorite: string, id: string) {
-    const user = await this.getCurrentUser();
+  private async removeFavorite(userId: string, favorite: string, id: string) {
+    const user = await this.getCurrentUser(userId);
     await this.prisma.user.update({
       where: { id: user.id },
       data: {
@@ -72,8 +59,8 @@ export class FavoritesRepository {
     });
   }
 
-  private async getFavoriteIds(favorite: string): Promise<string[]> {
-    const user = await this.getCurrentUser();
+  private async getFavoriteIds(userId: string, favorite: string): Promise<string[]> {
+    const user = await this.getCurrentUser(userId);
     return await this.prisma.user
       .findUnique({
         where: { id: user.id },
@@ -84,42 +71,41 @@ export class FavoritesRepository {
       .then((user) => user[favorite].map((fav) => fav.id));
   }
 
-  async addTrack(id: string) {
-    return this.addFavorite('favTracks', id);
-    // if (!this.favorites.tracks.includes(id)) this.favorites.tracks.push(id);
+  async addTrack(userId: string, id: string) {
+    return this.addFavorite(userId, 'favTracks', id);
   }
 
-  async removeTrack(id: string) {
-    return this.removeFavorite('favTracks', id);
+  async removeTrack(userId: string, id: string) {
+    return this.removeFavorite(userId, 'favTracks', id);
   }
 
-  async addArtist(id: string) {
-    const favorites = await this.getFavoriteArtistIds();
-    if (!favorites.includes(id)) await this.addFavorite('favArtists', id);
+  async addArtist(userId: string, id: string) {
+    const favorites = await this.getFavoriteArtistIds(userId);
+    if (!favorites.includes(id)) await this.addFavorite(userId, 'favArtists', id);
   }
 
-  async removeArtist(id: string) {
-    return this.removeFavorite('favArtists', id);
+  async removeArtist(userId: string, id: string) {
+    return this.removeFavorite(userId, 'favArtists', id);
   }
 
-  async addAlbum(id: string) {
-    const favorites = await this.getFavoriteAlbumIds();
-    if (!favorites.includes(id)) await this.addFavorite('favAlbums', id);
+  async addAlbum(userId: string, id: string) {
+    const favorites = await this.getFavoriteAlbumIds(userId);
+    if (!favorites.includes(id)) await this.addFavorite(userId, 'favAlbums', id);
   }
 
-  async removeAlbum(id: string) {
-    return this.removeFavorite('favAlbums', id);
+  async removeAlbum(userId: string, id: string) {
+    return this.removeFavorite(userId, 'favAlbums', id);
   }
 
-  async getFavoriteTrackIds(): Promise<string[]> {
-    return await this.getFavoriteIds('favTracks');
+  async getFavoriteTrackIds(userId: string): Promise<string[]> {
+    return await this.getFavoriteIds(userId, 'favTracks');
   }
 
-  async getFavoriteArtistIds(): Promise<string[]> {
-    return await this.getFavoriteIds('favArtists');
+  async getFavoriteArtistIds(userId: string): Promise<string[]> {
+    return await this.getFavoriteIds(userId, 'favArtists');
   }
 
-  async getFavoriteAlbumIds(): Promise<string[]> {
-    return await this.getFavoriteIds('favAlbums');
+  async getFavoriteAlbumIds(userId: string): Promise<string[]> {
+    return await this.getFavoriteIds(userId, 'favAlbums');
   }
 }
